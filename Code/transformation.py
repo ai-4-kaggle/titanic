@@ -127,9 +127,8 @@ def setAge0(row,meanAge):
     '''
     Age = row[0]
     sex = row[1]
-    Pclass = row[2]
     if(pd.isnull(Age)):
-        return int(meanAge[(meanAge['Pclass'] == Pclass) & (meanAge['Sex'] == sex)]['Age'].iloc[0])
+        return int(meanAge[(meanAge['Sex'] == sex)]['Age'].iloc[0])
     else:
         return int(Age)
         
@@ -235,12 +234,12 @@ def addFareBucket(df):
     
 def addAge(df):
     df_temp = df.copy()
-    t_Age = pd.DataFrame(df_temp.dropna().groupby(['Pclass','Sex']).mean()['Age'])
+    t_Age = pd.DataFrame(df_temp.dropna().groupby(['Sex']).mean()['Age'])
     t_Age = pd.DataFrame(t_Age.to_records())
     
     df['AgeCleaned'] = df[['Age','Sex','Pclass']].apply(lambda row: setAge0(row,t_Age),axis=1)
 
-    #df['AgeCleaned'] = df['Age'].apply(lambda x: 0 if pd.isnull(x) else x)
+    df['AgeCleaned'] = df['AgeCleaned'].apply(lambda x: x**2)
     
     
 #################################################
@@ -259,13 +258,17 @@ def cleanTitanicData(df):
     pclass = pd.get_dummies(df['Pclass'],drop_first=True,prefix='pclass_')
     
     # Add Age
-    addAge(df)
+    #addAge(df)
     
     #Similar to the sex series
     #embark = pd.get_dummies(df['Embarked'],drop_first=True)
 
     #Cabin either exists or doesn't -> 1 or 0
     addCabinExists(df)
+    
+    addIsOAP(df)
+    
+    addIsChild(df)
     
     # Get the total people
     #addTotalPpl(df)
