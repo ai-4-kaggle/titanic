@@ -239,7 +239,7 @@ def addAge(df):
     
     df['AgeCleaned'] = df[['Age','Sex','Pclass']].apply(lambda row: setAge0(row,t_Age),axis=1)
 
-    df['AgeCleaned'] = df['AgeCleaned'].apply(lambda x: x**2)
+    #df['AgeCleaned'] = df['AgeCleaned'].apply(lambda x: x**2)
     
     
 #################################################
@@ -258,7 +258,7 @@ def cleanTitanicData(df):
     pclass = pd.get_dummies(df['Pclass'],drop_first=True,prefix='pclass_')
     
     # Add Age
-    #addAge(df)
+    addAge(df)
     
     #Similar to the sex series
     #embark = pd.get_dummies(df['Embarked'],drop_first=True)
